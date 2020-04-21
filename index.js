@@ -1,13 +1,13 @@
-// const header = {
-//     "typ" : "JWT",
-//     "alg" : "HS256"
-// };
+const header = {
+    "typ" : "JWT",
+    "alg" : "HS256"
+};
 
 // // string형태로 보냄
-// const header = JSON.stringify(header)
-// const encodedHeader = Buffer.alloc(payload.length, payload)
-//                        .toString('base64')
-//                        .replace('=', '');
+const parseHeader = JSON.stringify(header)
+const encodedHeader = Buffer.alloc(parseHeader.length, parseHeader)
+                       .toString('base64')
+                       .replace('=', '');
 
 // console.log(encodedPayload);
 
@@ -26,7 +26,17 @@ const encodedPayload = Buffer.alloc(parsePayload.length, parsePayload)
                         .toString('base64')
                         .replace('=', '');
 // = 는 패딩문자, 지워줘도상관없다. JWT가 URL로 전달될 때 오류 방지하기 위함
-console.log(encodedPayload);
+//console.log(encodedPayload);
 
-// crypto.createHmac('sha256', 'secret')
-//         .update()
+const signature = crypto.createHmac('sha256', 'secret')
+                        .update(encodedHeader + '.' + encodedPayload)
+                        .digest('base64')
+                        .replace('=', '');
+
+//console.log(signature);
+
+//signature는 suga라고도 한다.
+
+// 최종토큰
+
+console.log(`${encodedHeader}.${encodedPayload}.${signature}`);
